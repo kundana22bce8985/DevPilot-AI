@@ -14,6 +14,10 @@ import streamlit as st
 from github_analyzer import show_github_analyzer, analyze_code
 from uploaded_workflow import run_uploaded_workflow
 
+# Keep the full integrated MCP/pgvector workflow on the Windows development machine.
+# Streamlit Community Cloud runs on Linux and hosts the read-only AI demo.
+IS_CLOUD_DEMO = sys.platform != "win32"
+
 BASE_DIR = Path(__file__).resolve().parent
 PROJECT_DIR = BASE_DIR / 'bug_demo'
 ENGINE_FILE = BASE_DIR / 'devpilot_integrated.py'
@@ -229,7 +233,19 @@ if page == 'Dashboard':
     st.subheader('Local DevPilot Workflow')
     st.info('Runs the verified integrated backend on trusted local bug_demo only. '
             'Uploaded/GitHub projects use separate read-only analysis.')
-    if st.button('🚀 Run Integrated DevPilot Analysis',type='primary',use_container_width=True):
+    if IS_CLOUD_DEMO:
+        st.info(
+            'Full MCP + pgvector test execution is available in the local Windows version. '
+            'On this hosted demo, use GitHub Analyzer or Upload Project for AI analysis '
+            'and proposed code fixes. Uploaded code is not executed.'
+        )
+
+    if st.button(
+        '🚀 Run Integrated DevPilot Analysis',
+        type='primary',
+        use_container_width=True,
+        disabled=IS_CLOUD_DEMO,
+    ):
         if not ENGINE_FILE.is_file():
             st.error('devpilot_integrated.py not found.')
         elif not PROJECT_DIR.is_dir():

@@ -1,0 +1,21 @@
+# Python virtual environments
+.venv/
+venv/
+
+# Python cache
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Environment secrets
+.env
+.env.*
+
+# Test reports
+.pytest_report.json
+.pytest_cache/
+.coverage
+
+# Temporary files
+temp/
+tmp/

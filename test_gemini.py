@@ -1,0 +1,27 @@
+
+import os
+from dotenv import load_dotenv
+from langchain_google_genai import ChatGoogleGenerativeAI
+
+load_dotenv()
+
+if not os.getenv("GOOGLE_API_KEY"):
+    raise RuntimeError("GOOGLE_API_KEY is missing from .env")
+
+print("Connecting to Gemini...", flush=True)
+
+llm = ChatGoogleGenerativeAI(
+    model="gemini-3.8-flash",
+    temperature=0,
+    timeout=90,
+    max_retries=1
+)
+
+try:
+    response = llm.invoke(
+        "Reply with only: Gemini connection successful"
+    )
+    print(response.content)
+except Exception as e:
+    print("Gemini request failed:")
+    print(type(e).__name__, str(e))
